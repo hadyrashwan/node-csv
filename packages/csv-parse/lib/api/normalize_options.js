@@ -118,6 +118,12 @@ const normalize_options = function(opts){
       `got ${JSON.stringify(options.comment_no_infix)}`
     ], options);
   }
+  
+  // Normalize option `auto_delimiter`
+  if(options.auto_delimiter === undefined || options.auto_delimiter == null){
+    console.log('normalize encoding',options.encoding);
+    options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
+  }
   // Normalize option `delimiter`
   const delimiter_json = JSON.stringify(options.delimiter);
   if(!Array.isArray(options.delimiter)) options.delimiter = [options.delimiter];

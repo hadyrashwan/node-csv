@@ -288,6 +288,12 @@ const normalize_options = function(opts){
       `got ${JSON.stringify(options.comment_no_infix)}`
     ], options);
   }
+  
+  // Normalize option `auto_delimiter`
+  if(options.auto_delimiter === undefined || options.auto_delimiter == null){
+    console.log('normalize encoding',options.encoding);
+    options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
+  }
   // Normalize option `delimiter`
   const delimiter_json = JSON.stringify(options.delimiter);
   if(!Array.isArray(options.delimiter)) options.delimiter = [options.delimiter];
@@ -926,6 +932,12 @@ const transform = function(original_options = {}) {
         this.info.lines++;
         this.state.wasRowDelimiter = false;
       }
+      // Auto discovery of auto_delimiter
+      if(this.options.auto_delimiter){
+        const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
+        this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, options.bom ? 'utf16le': encoding)]; // encoding is not correctly detected in bom case
+
+      }
     },
     __onRecord: function(push){
       const {columns, group_columns_by_name, encoding, info, from, relax_column_count, relax_column_count_less, relax_column_count_more, raw, skip_records_with_empty_values} = this.options;
@@ -1264,6 +1276,31 @@ const transform = function(original_options = {}) {
       }
       return 0;
     },
+    __autoDiscoverDelimiter: function(buf){
+      const separators = [',', ';', '|', '\t'];
+      const items = separators;
+
+      const itemCount = {};
+      let maxValue = 0;
+      let maxChar = ',';
+      let currValue;
+      items.forEach(function (item) {
+        itemCount[item] = 0;
+      });
+      const chunk = buf.toString();
+      for (let i = 0; i < chunk.length; i++) {
+        if (chunk[i] in itemCount) {
+          currValue = ++itemCount[chunk[i]];
+          if (currValue > maxValue) {
+            maxValue = currValue;
+            maxChar = chunk[i];
+          }
+        }
+      }
+
+      console.log(maxChar);
+      return maxChar;
+    },
     __error: function(msg){
       const {encoding, raw, skip_records_with_error} = this.options;
       const err = typeof msg === 'string' ? new Error(msg) : msg;
@@ -1366,6 +1403,7 @@ class Parser extends stream.Transform {
 
 const parse = function(){
   let data, options, callback;
+  console.log(options);
   for(const i in arguments){
     const argument = arguments[i];
     const type = typeof argument;
