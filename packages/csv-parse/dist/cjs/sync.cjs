@@ -933,7 +933,7 @@ const transform = function(original_options = {}) {
       if(this.options.auto_delimiter){
         const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
         this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, encoding)]; // encoding is not correctly detected in bom case
-
+        console.log(this.options.delimiter, this.options.delimiter[0].toString());
       }
     },
     __onRecord: function(push){
@@ -1287,6 +1287,7 @@ const transform = function(original_options = {}) {
       const chunk = buf.toString();
       for (let i = 0; i < chunk.length; i++) {
         if (chunk[i] in itemCount) {
+          console.log(maxChar,maxValue);
           currValue = ++itemCount[chunk[i]];
           if (currValue > maxValue) {
             maxValue = currValue;
