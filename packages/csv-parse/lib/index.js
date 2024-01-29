@@ -66,7 +66,6 @@ class Parser extends Transform {
 
 const parse = function(){
   let data, options, callback;
-  console.log(options);
   for(const i in arguments){
     const argument = arguments[i];
     const type = typeof argument;
