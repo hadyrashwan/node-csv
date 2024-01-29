@@ -341,8 +341,8 @@ const transform = function(original_options = {}) {
       // Auto discovery of auto_delimiter
       if(this.options.auto_delimiter){
         const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
-        this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, options.bom ? 'utf16le': encoding)]; // encoding is not correctly detected in bom case
-
+        this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, encoding)]; // encoding is not correctly detected in bom case
+        console.log(this.options.delimiter, this.options.delimiter[0].toString());
       }
     },
     __onRecord: function(push){
@@ -683,6 +683,7 @@ const transform = function(original_options = {}) {
       return 0;
     },
     __autoDiscoverDelimiter: function(buf){
+      console.log(buf.toString());
       const separators = [',', ';', '|', '\t'];
       const items = separators;
 
@@ -696,6 +697,7 @@ const transform = function(original_options = {}) {
       const chunk = buf.toString();
       for (let i = 0; i < chunk.length; i++) {
         if (chunk[i] in itemCount) {
+          console.log(maxChar,maxValue);
           currValue = ++itemCount[chunk[i]];
           if (currValue > maxValue) {
             maxValue = currValue;
@@ -704,7 +706,6 @@ const transform = function(original_options = {}) {
         }
       }
 
-      console.log(maxChar);
       return maxChar;
     },
     __error: function(msg){

@@ -2262,7 +2262,6 @@ var csv_parse_sync = (function (exports) {
               
               // Normalize option `auto_delimiter`
               if(options.auto_delimiter === undefined || options.auto_delimiter == null){
-                console.log('normalize encoding',options.encoding);
                 options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
               }
               // Normalize option `delimiter`
@@ -2906,7 +2905,7 @@ var csv_parse_sync = (function (exports) {
                   // Auto discovery of auto_delimiter
                   if(this.options.auto_delimiter){
                     const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
-                    this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, options.bom ? 'utf16le': encoding)]; // encoding is not correctly detected in bom case
+                    this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, encoding)]; // encoding is not correctly detected in bom case
 
                   }
                 },
@@ -3269,7 +3268,6 @@ var csv_parse_sync = (function (exports) {
                     }
                   }
 
-                  console.log(maxChar);
                   return maxChar;
                 },
                 __error: function(msg){

@@ -121,7 +121,6 @@ const normalize_options = function(opts){
   
   // Normalize option `auto_delimiter`
   if(options.auto_delimiter === undefined || options.auto_delimiter == null){
-    console.log('normalize encoding',options.encoding);
     options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
   }
   // Normalize option `delimiter`

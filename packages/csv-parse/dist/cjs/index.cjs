@@ -291,7 +291,6 @@ const normalize_options = function(opts){
   
   // Normalize option `auto_delimiter`
   if(options.auto_delimiter === undefined || options.auto_delimiter == null){
-    console.log('normalize encoding',options.encoding);
     options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
   }
   // Normalize option `delimiter`
@@ -935,7 +934,7 @@ const transform = function(original_options = {}) {
       // Auto discovery of auto_delimiter
       if(this.options.auto_delimiter){
         const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
-        this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, options.bom ? 'utf16le': encoding)]; // encoding is not correctly detected in bom case
+        this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, encoding)]; // encoding is not correctly detected in bom case
 
       }
     },
@@ -1298,7 +1297,6 @@ const transform = function(original_options = {}) {
         }
       }
 
-      console.log(maxChar);
       return maxChar;
     },
     __error: function(msg){
