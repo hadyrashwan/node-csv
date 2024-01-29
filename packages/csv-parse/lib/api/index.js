@@ -683,7 +683,6 @@ const transform = function(original_options = {}) {
       return 0;
     },
     __autoDiscoverDelimiter: function(buf){
-      console.log(buf.toString());
       const separators = [',', ';', '|', '\t'];
       const items = separators;
 
