@@ -684,27 +684,32 @@ const transform = function(original_options = {}) {
     },
     __discoverDelimiterAuto: function(buf){
       const separators = [',', ';', '|', '\t'];
-      const items = separators;
-
       const itemCount = {};
       let maxValue = 0;
       let maxChar = ',';
       let currValue;
-      items.forEach(function (item) {
+    
+      // Initialize itemCount for each separator
+      separators.forEach(function (item) {
         itemCount[item] = 0;
       });
-      const chunk = buf.toString();
-      for (let i = 0; i < chunk.length; i++) {
-        if (chunk[i] in itemCount) {
-          console.log(maxChar,maxValue);
-          currValue = ++itemCount[chunk[i]];
-          if (currValue > maxValue) {
-            maxValue = currValue;
-            maxChar = chunk[i];
+    
+      // Iterate through each byte in the buffer
+      for (let i = 0; i < buf.length; i++) {
+        const byte = buf[i];
+    
+        // Check if the byte corresponds to any of the separators
+        separators.forEach(function (separator) {
+          if (separator.charCodeAt(0) === byte) {
+            currValue = ++itemCount[separator];
+            if (currValue > maxValue) {
+              maxValue = currValue;
+              maxChar = separator;
+            }
           }
-        }
+        });
       }
-
+    
       return maxChar;
     },
     __error: function(msg){
