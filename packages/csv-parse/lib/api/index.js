@@ -684,13 +684,14 @@ const transform = function(original_options = {}) {
     },
     __discoverDelimiterAuto: function(buf){
       const separators = [',', ';', '|', '\t'];
+      const separatorsBytes = separators.map(s => s.charCodeAt(0));
       const itemCount = {};
       let maxValue = 0;
       let maxChar = ',';
       let currValue;
     
       // Initialize itemCount for each separator
-      separators.forEach(function (item) {
+      separatorsBytes.forEach(function (item) {
         itemCount[item] = 0;
       });
     
@@ -699,8 +700,8 @@ const transform = function(original_options = {}) {
         const byte = buf[i];
     
         // Check if the byte corresponds to any of the separators
-        separators.forEach(function (separator) {
-          if (separator.charCodeAt(0) === byte) {
+        separatorsBytes.forEach(function (separator) {
+          if (separator === byte) {
             currValue = ++itemCount[separator];
             if (currValue > maxValue) {
               maxValue = currValue;
@@ -710,7 +711,7 @@ const transform = function(original_options = {}) {
         });
       }
     
-      return maxChar;
+      return String.fromCharCode(maxChar);
     },
     __error: function(msg){
       const {encoding, raw, skip_records_with_error} = this.options;
