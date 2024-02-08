@@ -119,10 +119,8 @@ const normalize_options = function(opts){
     ], options);
   }
   
-  // Normalize option `auto_delimiter`
-  if(options.auto_delimiter === undefined || options.auto_delimiter == null){
-    options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
-  }
+  // Normalize option `delimiter_auto`
+  options.delimiter_auto = !!(options.delimiter_auto);
   // Normalize option `delimiter`
   const delimiter_json = JSON.stringify(options.delimiter);
   if(!Array.isArray(options.delimiter)) options.delimiter = [options.delimiter];

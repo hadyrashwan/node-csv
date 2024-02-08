@@ -59,7 +59,7 @@ describe 'Option `rtrim`', ->
     "a\tb\t"\t\t\t,"c\td\t\t\t"\t
     "e\tf\t"\t,"g\th\t\t\t"\t\t\t
     '''
-    parser = parse rtrim: true,auto_delimiter: false, (err, records) ->
+    parser = parse rtrim: true,delimiter_auto: false, (err, records) ->
       records.should.eql [['a\tb\t', 'c\td\t\t\t'],['e\tf\t', 'g\th\t\t\t']] unless err
       next err
     parser.write chr for chr in data

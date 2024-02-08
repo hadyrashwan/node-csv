@@ -2260,10 +2260,8 @@ var csv_parse_sync = (function (exports) {
                 ], options);
               }
               
-              // Normalize option `auto_delimiter`
-              if(options.auto_delimiter === undefined || options.auto_delimiter == null){
-                options.auto_delimiter = options.delimiter === undefined || options.delimiter === null || options.delimiter === false ;
-              }
+              // Normalize option `delimiter_auto`
+              options.delimiter_auto = !!(options.delimiter_auto);
               // Normalize option `delimiter`
               const delimiter_json = JSON.stringify(options.delimiter);
               if(!Array.isArray(options.delimiter)) options.delimiter = [options.delimiter];
@@ -2671,6 +2669,12 @@ var csv_parse_sync = (function (exports) {
                     }
                   }
                   const bufLen = buf.length;
+                  // Auto discovery of delimiter_auto
+                  if(this.options.delimiter_auto){
+                    const delimiter_auto_output = this.__discoverDelimiterAuto(buf);
+                    this.options.delimiter = typeof this.options.delimiter === 'string' ? delimiter_auto_output : [Buffer.from(delimiter_auto_output, encoding)]; // encoding is not correctly detected in bom case
+                    console.log(this.options.delimiter, this.options.delimiter[0].toString());
+                  }
                   let pos;
                   for(pos = 0; pos < bufLen; pos++){
                     // Ensure we get enough space to look ahead
@@ -2901,12 +2905,6 @@ var csv_parse_sync = (function (exports) {
                   if(this.state.wasRowDelimiter === true){
                     this.info.lines++;
                     this.state.wasRowDelimiter = false;
-                  }
-                  // Auto discovery of auto_delimiter
-                  if(this.options.auto_delimiter){
-                    const auto_delimiter_output = this.__autoDiscoverDelimiter(buf,pos);
-                    this.options.delimiter = typeof this.options.delimiter === 'string' ? auto_delimiter_output : [Buffer.from(auto_delimiter_output, encoding)]; // encoding is not correctly detected in bom case
-                    console.log(this.options.delimiter, this.options.delimiter[0].toString());
                   }
                 },
                 __onRecord: function(push){
@@ -3246,7 +3244,7 @@ var csv_parse_sync = (function (exports) {
                   }
                   return 0;
                 },
-                __autoDiscoverDelimiter: function(buf){
+                __discoverDelimiterAuto: function(buf){
                   const separators = [',', ';', '|', '\t'];
                   const items = separators;
 

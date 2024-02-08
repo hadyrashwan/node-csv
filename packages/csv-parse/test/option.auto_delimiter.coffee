@@ -1,13 +1,13 @@
 
 import { parse } from '../lib/index.js'
 
-describe 'Option `auto_delimiter`', ->
+describe 'Option `delimiter_auto`', ->
   
   it 'using tab', (next) ->
-    parse """
+    parse  """
     abc\t\tde\tf\t
     \thij\tklm\t\t
-    """, (err, records) ->
+    """,    { delimiter_auto: true }, (err, records) ->
       return next err if err
       records.should.eql [
         [ 'abc','','de','f','']
